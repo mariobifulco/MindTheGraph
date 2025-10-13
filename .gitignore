@@ -1,0 +1,8 @@
+venv
+report/build
+.DS_Store
+*.csv
+__pycache__
+wandb
+draft.ipynb
+.vscode
