@@ -49,7 +49,8 @@ Minor Embedding (ME) heuristically constructs this mapping by associating each n
 
 We focus on dense optimization problems where $G_P$ is a clique, and evaluate ME performance across two QPU topologies: Zephyr graphs (used in current D-Wave systems) and Havel-Hakimi graphs, which allow controlled variation of the average node degree. This enables us to study how the ratio `number of nodes/number of incident arcs per node' affects ME success rates when establishing the mapping between $G_P$ and $G_Q$.
 
-Our findings suggest that Havel-Hakimi-based topologies offer smoother scaling with respect to the key parameters \LH{\tiny (si possono elencare?)} that influence QPU performance and solution quality, indicating their potential for the design of QA-based QPUs alternative to the existing ones.
+Our findings suggest that Havel–Hakimi–based topologies yield shorter qubit chains in the embedded graph and exhibit smoother scaling of the largest embeddable clique as the QPU size increases. 
+These characteristics indicate their potential as alternative designs for QA-based QPUs.
 \end{abstract}
 
 
@@ -66,17 +67,9 @@ The QA workflow can be summarized in three key steps:
 \begin{enumerate*}
   \item Express the problem $P$ in Quadratic Unconstrained Binary Optimization (QUBO) form~\cite{lucas} which means to to represent $P$ as a clique $G_P$;
   \item Embed $G_P$ into the hardware graph $G_Q$ of the quantum processing unit (QPU)~\cite{ME, MEdwave, MENP, localembedding};
-  \item \LHs{Execute the quantum annealing process to obtain solutions.}
-  \LH{Start the quantum annealing process that let the QPU, i.e. $ G_Q$ seen as a physical system, evolve toward a low-energy state that represents the solution.}
+  \item Start the quantum annealing process that let the QPU, i.e. $ G_Q$ seen as a physical system, evolve toward a low-energy state that represents the solution.
 \end{enumerate*}
 
-\LH{\tiny (Le righe da 34 a 43 sembrano identiche all'abstract da cui sono partito poco fa e che ho tentato di raffinare ancora, rendendolo più specifico di come fosse all'inizio, ma con ancora qualcosa da aggiungere. A questo punto, io non ripeterei l'abstract a meno che non abbiamo qualche dettaglio rilevante da aggiungergli.)}
-Our primary objective is to quantitatively assess how different QPU topologies $G_Q$ influence \emph{how much successful} the Minor Embedding (ME) of dense problem graphs $G_P$ into $G_Q$ can be, highlighting structural factors \LH{of $G_Q$} that affect scalability and stability \LH{\tiny (Cosa si intende per ``stability''?)}.
-We focus on cliques as representative cases of dense $G_P$ and compare Zephyr graphs -- current D-Wave's choice for $G_Q$ -- with alternative Havel-Hakimi constructions.
-Our analysis evaluates the efficiency of the minor embedding procedure in producing the embedded graph $G_E$, depending on a wide set of parameters related to $G_Q$.
-Our findings promote the idea that Havel–Hakimi–based QPU topologies could enable smoother scaling with respect to parameters known to influence computational performance and the capacity to reach optimal solutions.
-
-\LH{\tiny (Come suggerito alle righe 32 -- 34, toglierei la parte qui sopra (o la sposterei) per parlare del ME il cui studio diventa la motivazione del lavoro. Infatti, dopo aver detto in che ambito di mettiamo alle righe 19 -- 31, mi pare corretto dire perché scriviamo il lavoro.)}
 \paragraph{Minor embedding}
 For ease of reference and completeness, we recall that a graph $G_m$ is a \emph{minor} of another graph $G$ if $G_m$ can be obtained from $G$ by applying, a finite number of times, at least one of the following operations: (i) edge contraction; (ii) node or edge deletion.
 A classical result is the Robertson--Seymour Theorem. It states that, starting from $G$, we can build a family of minors by generating all and only the minors $G_1, G_2, \dots$ of $G$, then recursively generating all and only the minors of each $G_i$, and so on, until no new graphs can be added. The result is a family of graphs that is \emph{downward-closed} with respect to the minor relation.
@@ -207,7 +200,7 @@ This normalization allows all configurations to be represented in a common param
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{imgs/vs.png}
-    \caption{Normalized embeddability of cliques $G_P$ across Zephyr and Havel–Hakimi QPU topologies $G_Q$.}
+    \caption{Normalized embeddability of cliques $G_P$ across Zephyr and Havel–Hakimi QPU $G_Q$.}
     \Description{Scatter plot comparing the normalized clique size embeddable on Zephyr and Havel–Hakimi QPU graphs $G_Q$.}
     \label{fig:zephyr_vs_hh}
   \end{subfigure}\hfill
