@@ -43,14 +43,15 @@
 \begin{document}
 
 \begin{abstract}
-Quantum Annealing (QA) offers a promising framework for solving NP-hard optimization problems, but its effectiveness is constrained by the topology of the underlying quantum hardware. Solving an optimization problem $ P $ via QA involves representing $P$ as a graph $G_P$, and mapping it onto a hardware graph $G_Q$ that defines the connectivity of a QA-based quantum processing unit (QPU).
+Quantum Annealing (QA) offers a promising framework for solving NP-hard optimization problems, but its effectiveness is constrained by the topology of the underlying quantum hardware. Solving an optimization problem $P$ via QA involves a \LH{hardware-aware compilation} which requires representing $P$ as a graph $G_P$ and relating it to a minor of $G_Q$, with $G_Q$ being the hardware graph that defines how qubits connect to each other in a QA-based quantum processing unit (QPU).
 
-Minor Embedding (ME) heuristically constructs this mapping by associating each node of $G_P$ --- the logical variables of $P$ --- to a chain of adjacent nodes in $G_Q$, preserving the connectivity of $G_P$ within the connectivity constraints imposed by $G_Q$. This process introduces both overhead and error sensitivity, making the connectivity of $G_Q$ a potential bottleneck for performance.
+\LH{Minor Embedding (ME) is a possible operational form of the hardware-aware compilation we are dealing with}. ME heuristically builds a map that associates each node of $G_P$ --- the logical variables of $P$ --- to a chain of adjacent nodes in the \LH{minor} of $G_Q$, \LH{so that the arcs of $G_P$ are preserved as physical connections among qubits in $G_Q$}.
 
-We focus on dense optimization problems where $G_P$ is a clique, and evaluate ME performance across two QPU topologies: Zephyr graphs (used in current D-Wave systems) and Havel-Hakimi graphs, which allow controlled variation of the average node degree. This enables us to study how the ratio `number of nodes/number of incident arcs per node' affects ME success rates when establishing the mapping between $G_P$ and $G_Q$.
+\LH{The static topology of hardwired qubits can clearly lead to inefficient compilations because $G_Q$ cannot be a clique, currently. We propose a methodology and a set of criteria to evaluate how the hardware topology $G_Q$ can (negatively) affect standard parameters to obtain quantum advantage when solving optimization problems}.
 
-Our findings suggest that Havel–Hakimi–based topologies yield shorter qubit chains in the embedded graph and exhibit smoother scaling of the largest embeddable clique as the QPU size increases. 
-These characteristics indicate their potential as alternative designs for QA-based QPUs.
+\LHs{We focus on dense optimization problems where $G_P$ is a clique, and} \LH{We} evaluate the result of ME across two QPU topologies: Zephyr graphs (used in current D-Wave systems) and Havel-Hakimi graphs, which allow controlled variation of the average node degree. This enables us to study how the ratio `number of nodes/number of incident arcs per node' affects ME success rates to map $G_P$ into \LH{a minor of} $G_Q$.
+
+Our findings, obtained through simulation, suggest that Havel–Hakimi–based topologies yield shorter qubit chains in the embedded graph and exhibit smoother scaling of the largest embeddable clique as the QPU size increases. These characteristics indicate their potential as alternative designs for QA-based QPUs.
 \end{abstract}
 
 
