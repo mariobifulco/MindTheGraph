@@ -45,13 +45,16 @@
 \begin{abstract}
 Quantum Annealing (QA) offers a promising framework for solving NP-hard optimization problems, but its effectiveness is constrained by the topology of the underlying quantum hardware. Solving an optimization problem $P$ via QA involves a hardware-aware compilation which requires representing $P$ as a graph $G_P$ and relating it to a minor of $G_Q$, with $G_Q$ being the hardware graph that defines how qubits connect to each other in a QA-based quantum processing unit (QPU).
 
-Minor Embedding (ME) is a possible operational form of the hardware-aware compilation we are dealing with. ME heuristically builds a map that associates each node of $G_P$ --- the logical variables of $P$ --- to a chain of adjacent nodes in the minor of $G_Q$, so that the arcs of $G_P$ are preserved as physical connections among qubits in $G_Q$.
+%%%%% Original
+%Minor Embedding (ME) is a possible operational form of the hardware-aware compilation we are dealing with. ME heuristically builds a map that associates each node of $G_P$ --- the logical variables of $P$ --- to a chain of adjacent nodes in the minor of $G_Q$, so that the arcs of $G_P$ are preserved as physical connections among qubits in $G_Q$.
 
-The static topology of hardwired qubits can clearly lead to inefficient compilations because $G_Q$ cannot be a clique, currently. We propose a methodology and a set of criteria to evaluate how the hardware topology $G_Q$ can (negatively) affect \MH{the embedded problem, thus making the quantum optimization more sensible to noise}.
+Minor Embedding (ME) is a possible operational form of the hardware-aware compilation we are dealing with. ME heuristically builds a map that associates each node of $G_P$ --- the logical variables of $P$ --- to a chain of \LH{adjacent nodes in $G_Q$ by means of one of its minors}, so that the arcs of $G_P$ are preserved as physical connections among qubits in $G_Q$.
+
+The static topology of hardwired qubits can clearly lead to inefficient compilations because $G_Q$ cannot be a clique, currently. We propose a methodology and a set of criteria to evaluate how the hardware topology $G_Q$ can \LHs{(negatively)} \LH{negatively} affect the embedded problem, thus making the quantum optimization more sensible to noise.
 
 We evaluate the result of ME across two QPU topologies: Zephyr graphs (used in current D-Wave systems) and Havel-Hakimi graphs, which allow controlled variation of the average node degree. This enables us to study how the ratio `number of nodes/number of incident arcs per node' affects ME success rates to map $G_P$ into a minor of $G_Q$.
 
-Our findings, obtained through \MH{classical ME execution}, suggest that Havel–Hakimi–based topologies yield shorter qubit chains in the embedded graph and exhibit smoother scaling of the largest embeddable clique as the QPU size increases. These characteristics indicate their potential as alternative designs for QA-based QPUs.
+Our findings, obtained through \LH{ME executed on classical, i.e. non quantum, architectures}, suggest that Havel–Hakimi–based topologies, \LH{on average}, \LHs{yield} \LH{require} shorter qubit chains in the \LHs{embedded} \LH{minor}  of $G_P$, \LH{exhibiting} smoother scaling of the largest embeddable \LHs{clique} $G_P$ as the QPU size increases. These characteristics indicate their potential as alternative designs for QA-based QPUs.
 \end{abstract}
 
 
@@ -76,11 +79,15 @@ The QA workflow can be schematically divided into three main stages:
   \item Execute the annealing process, during which the physical system described by $G_Q$ evolves toward a low-energy state encoding the solution of $P$.
 \end{enumerate*}
 
-The second step, known as \emph{minor embedding} (ME), is a crucial stage in the compilation flow, as it adapts the logical connectivity of $P$ to the limited and non-clique topology of real QPUs.
+\LH{Secondo me, tutto il seguente paragrafo va riscrtto perché l'ultima frase, in fondo, dà una prima motivazione del lavoro. Occorre chiarire sin dalle prime battute che stai spiegando il secondo item del precedente elenco puntato. Qui lo chiami step, ma nell'enumerazione sopra è stage. Per non perdere il filo è necessario usare sempre le stesse parole che, proprio perché ripetute, fungono da puntatori. Provo a suggerire cosa intendo, nel testo che lascio commentato sotto.}
+The second step known as \emph{minor embedding} (ME), is a crucial stage in the compilation flow, as it adapts the logical connectivity of $P$ to the limited and non-clique topology of real QPUs.
 Since the topological structure of $G_Q$ directly constrains which problems can be efficiently embedded, the quality of this step significantly affects both performance and scalability.
+%%%%%%%%%%%%%%%% Alterantiva? O forse è meglio trovare una via di mezzo tra le due, che funga da moivazione per introdurre il Minor embedding nel "dettaglio" come facciamo sotto??
+%Minor embedding (ME) is a heuristic that implements the second stage of the compilation flow. It adapts the logical connectivity of P to the limited, non-clique topology $G_Q$ of current QPUs. We want propose tools to assess ME quality, as the structure of G_Q directly constrains which problems can be efficiently embedded.
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \paragraph{Minor embedding}
-
 For completeness, recall that a graph $G_m$ is a \emph{minor} of another graph $G$ if it can be obtained from $G$ through a finite sequence of edge contractions and vertex or edge deletions.
 A classical result in graph theory—the \emph{Robertson–Seymour theorem}—states that the set of all minors of a given graph is \emph{downward-closed} under the minor relation, and that any such family can be characterized by a finite number of \emph{forbidden minors}.
 
