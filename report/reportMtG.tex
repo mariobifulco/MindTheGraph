@@ -105,12 +105,12 @@ Consequently, long chains of qubits are often required to emulate logical connec
 \subsection{Topological limitations and motivation for this study}
 
 Recent generations of D-Wave annealers illustrate this trade-off between connectivity and scalability.
-The Pegasus topology~\cite{Pegasus}, for instance, allows embeddings of up to roughly 100-variable cliques on a QPU with more than 5000 qubits~\cite{mscthesis}.
-The more recent Zephyr topology, while featuring fewer physical qubits (around 4000), provides denser connectivity and can embed cliques up to approximately 150 nodes.
+The Pegasus topology~\cite{Pegasus}, for instance, allows embeddings of up to roughly \LH{(scegliamo) 100-variable cliques (o 100 nodes come più avanti?)} on a QPU with more than 5000 qubits~\cite{mscthesis}.
+The more recent Zephyr topology, while featuring fewer physical qubits (around 4000), provides denser connectivity and can embed cliques up to approximately \LH{(scegliamo) 150  nodes (o 150-varaible cliques come prima?)}.
 Such differences highlight the crucial role of topology in determining the expressive power of a quantum annealer.
 
-This observation motivates a more systematic study of how different hardware topologies influence embeddability and, consequently, the efficiency of QA-based optimization.
-Understanding these dependencies can provide valuable insights for both compiler design and QPU architecture development.
+This observation motivates a \LHs{more} systematic study of how different \LH{QA-based QPUs} \LHs{hardware} topologies influence embeddability \LH{(non ricordo già più se abbiamo bandito l'uso della parola ``embeddability''. Chiedo perché, ovviamente è intuitiva, ma non so quanto standard. Se si introduce terminologia, è necessario fornire almeno una volta il significato.) } and, consequently, the efficiency of QA-based optimization.
+Understanding these dependencies can provide valuable insights for both compiler design and QPU architecture development. \LH{(Quest'ultima frase mi pare generica. Se non si riese a rendere più incisiva, la toglierei.)}
 
 \section{QPU Topology}
 
