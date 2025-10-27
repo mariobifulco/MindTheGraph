@@ -17,16 +17,14 @@
 
 
 % NOTES CMDS
-\usepackage{ulem}
-\newcommand{\LH}[1]{\textcolor{blue}{{ #1}}}
-\newcommand{\LHs}[1]{\textcolor{blue}{\sout {#1}}}
-\newcommand{\MH}[1]{\textcolor{red}{{ #1}}}
-\newcommand{\MHs}[1]{\textcolor{red}{\sout {#1}}}
+% \usepackage{ulem}
+% \newcommand{\LH}[1]{\textcolor{blue}{{ #1}}}
+% \newcommand{\LHs}[1]{\textcolor{blue}{\sout {#1}}}
+% \newcommand{\MH}[1]{\textcolor{red}{{ #1}}}
+% \newcommand{\MHs}[1]{\textcolor{red}{\sout {#1}}}
 % END NOTES CMDS
 
 \title{Exploring Graph Topologies in Quantum Annealing}
-%\title{The Role of Topology in Quantum Annealing}
-%\title{Mind the Graph: The Role of Topology in Quantum Annealing}
 
 \author{Mario Bifulco}
 \affiliation{%
@@ -45,15 +43,15 @@
 \begin{document}
 
 \begin{abstract}
-Quantum Annealing (QA) offers a promising framework for solving NP-hard optimization problems, but its effectiveness is constrained by the topology of the underlying quantum hardware. Solving an optimization problem $P$ via QA involves a hardware-aware compilation which requires representing $P$ as a graph $G_P$ and relating it to a minor of $G_Q$, with $G_Q$ being the hardware graph that defines how qubits connect to each other in a QA-based quantum processing unit (QPU).
+  Quantum Annealing (QA) offers a promising framework for solving NP-hard optimization problems, but its effectiveness is constrained by the topology of the underlying quantum hardware. Solving an optimization problem $P$ via QA involves a hardware-aware compilation which requires representing $P$ as a graph $G_P$ and relating it to a minor of $G_Q$, with $G_Q$ being the hardware graph that defines how qubits connect to each other in a QA-based quantum processing unit (QPU).
 
-Minor Embedding (ME) is a possible operational form of the hardware-aware compilation we are dealing with. ME heuristically builds a map that associates each node of $G_P$ --- the logical variables of $P$ --- to a chain of adjacent nodes in $G_Q$ by means of one of its minors, so that the arcs of $G_P$ are preserved as physical connections among qubits in $G_Q$.
+  Minor Embedding (ME) is a possible operational form of the hardware-aware compilation we are dealing with. ME heuristically builds a map that associates each node of $G_P$ --- the logical variables of $P$ --- to a chain of adjacent nodes in $G_Q$ by means of one of its minors, so that the arcs of $G_P$ are preserved as physical connections among qubits in $G_Q$.
 
-The static topology of hardwired qubits can clearly lead to inefficient compilations because $G_Q$ cannot be a clique, currently. We propose a methodology and a set of criteria to evaluate how the hardware topology $G_Q$ can negatively affect the embedded problem, thus making the quantum optimization more sensible to noise.
+  The static topology of hardwired qubits can clearly lead to inefficient compilations because $G_Q$ cannot be a clique, currently. We propose a methodology and a set of criteria to evaluate how the hardware topology $G_Q$ can negatively affect the embedded problem, thus making the quantum optimization more sensible to noise.
 
-We evaluate the result of ME across two QPU topologies: Zephyr graphs (used in current D-Wave systems) and Havel-Hakimi graphs, which allow controlled variation of the average node degree. This enables us to study how the ratio `number of nodes/number of incident arcs per node' affects ME success rates to map $G_P$ into a minor of $G_Q$.
+  We evaluate the result of ME across two QPU topologies: Zephyr graphs (used in current D-Wave systems) and Havel-Hakimi graphs, which allow controlled variation of the average node degree. This enables us to study how the ratio `number of nodes/number of incident arcs per node' affects ME success rates to map $G_P$ into a minor of $G_Q$.
 
-Our findings, obtained through ME executed on classical, i.e. non-quantum, architectures, suggest that Havel–Hakimi–based topologies, on average, require shorter qubit chains in the minor  of $G_P$, exhibiting smoother scaling of the largest embeddable $G_P$ as the QPU size increases. These characteristics indicate their potential as alternative designs for QA-based QPUs.
+  Our findings, obtained through ME executed on classical, i.e. non-quantum, architectures, suggest that Havel–Hakimi–based topologies, on average, require shorter qubit chains in the minor  of $G_P$, exhibiting smoother scaling of the largest embeddable $G_P$ as the QPU size increases. These characteristics indicate their potential as alternative designs for QA-based QPUs.
 \end{abstract}
 
 
@@ -89,52 +87,42 @@ A classical result in graph theory—the \emph{Robertson–Seymour theorem}—st
 
 In QA, however, the objective is more concrete: given a problem graph $G_P$ and a hardware graph $G_Q$, the goal is to find a minor $G_m$ of $G_Q$ that is isomorphic to $G_P$.
 In practical terms, this means associating each logical variable of $P$ (a node of $G_P$) with a chain of physically adjacent qubits (nodes of $G_Q$), while preserving the adjacency relations that encode the problem’s constraints.
-An illustrative example is reported in Figure~\ref{fig:embedding}, where a triangular problem graph is embedded into a square-lattice hardware graph.
 
 The main difficulty of this process lies in the fact that current QPUs cannot realize fully connected topologies.
 Consequently, long chains of qubits are often required to emulate logical connections, increasing susceptibility to noise and reducing the effective precision of the quantum annealing step.
-
-%We remark that the study of minor embedding has implications beyond quantum computing itself, as it shares structural analogies with placement and routing problems in VLSI design, where logical circuits must also be efficiently mapped onto physically constrained architectures.
-
-\begin{figure}
-  \centering
-  \adjustbox{scale=0.65,center}{\includegraphics[width=\textwidth]{imgs/embedding.png}}
-  \caption{Example of minor embedding: a problem graph $G_P$ (triangle) mapped onto the QPU topology $G_Q$ (square lattice), resulting in an embedded graph $G_E$.}
-  \Description{Example of a problem graph $G_P$ with triangular connectivity embedded into a square-lattice QPU topology $G_Q$, forming the embedded graph $G_E$.}
-  \label{fig:embedding}
-\end{figure}
 
 \subsection{Topological limitations and motivation for this study}
 
 Recent generations of D-Wave annealers illustrate this trade-off between connectivity and scalability.
 The Pegasus topology~\cite{Pegasus}, for instance, allows embeddings of up to roughly 100-variable cliques on a QPU with more than 5000 qubits~\cite{mscthesis}.
-The more recent Zephyr topology, while featuring fewer physical qubits (around 4000), provides denser connectivity and can embed cliques up to approximately 150-varaible cliques.
-Such differences highlight the crucial role of topology in determining the \LH{expressive power of a quantum annealer}, \LH{to us, ``expressive power'', in this context, meaning ``the average maximal dimension of a clique that can be minor embedded into an annealer.''}
+The more recent Zephyr topology, while featuring fewer physical qubits (around 4000), provides denser connectivity and can embed cliques up to approximately 150-variable cliques.
+Such differences highlight the crucial role of topology in determining the expressive power of a quantum annealer, to us, ``expressive power'', in this context, meaning ``the maximal dimension of a clique that can be minor embedded into an annealer.''
 This observation motivates a systematic study of how different QA-based QPUs topologies influence the embedded problem $G_E$.
 
 \section{QPU Topology}
 
-\LHs{The topology of a QPU, represented by its graph $G_Q$, determines the set of feasible embeddings and ultimately constrains the expressivity of quantum annealing.} \LH{(Trovo la frase una ripetizione du quanto detto poco prima)}
 The topology can be analyzed at both coarse and fine granularity.
-At a coarse level, metrics such as the number of nodes, edges, and the resulting average degree provide a global characterization \LH{, by which we mean $\ldots$}.
-\LHs{However, embedding performance} \LH{(Non va bene cambiare termini. Con ``embedding performance'' intendiamo ancora ``expressive power'', secondo la definizione che ho provato ad abbozzare prima? Inltre, qui non è più necessario dire quanto già illustrato riguardo alla performance. Stai dicendo cosa è coarse e cosa è finer granularity.)} \LHs{depends strongly on the fine structure of $G_Q$:} \LH{At a finer level, it is known (\textbf{è noto?}) that metrics like} \emph{regularity}\LH{, i.e. (spiegazione?)\ldots}, \emph{modularity}\LH{, i.e. \ldots}, and \emph{degree distribution}, \LH{i.e. \ldots}, \LH{allow to highlight \ldots (elencare cosa evidenziano?) } \LHs{significantly affect how a problem graph $G_P$ can be mapped to form the embedded graph $G_E$}.
+At a coarse level, metrics such as the number of nodes, edges, and the resulting average degree provide a first approximation of how densely connected the QPU is.
 
-\LH{We are going to use the fine granularity metrics to compare Zephyr and Havel–Hakimi graph topologies of which Figure~\ref{fig:zephyr_hh} gives a pictorial comparison, relative to graphs of similar size and average degree.}
+At a finer level, additional structural metrics provide a more detailed understanding of the topology.
+In particular, \emph{regularity} quantifies how uniform the degree distribution is across nodes and \emph{modularity} measures the extent to which the graph can be partitioned into clusters with dense internal connections and sparse external ones.
+These finer-grained properties help highlight local structural inhomogeneities, possible bottlenecks for embedding, and overall connectivity patterns that influence the expressive power.
+
+We use these fine-grained metrics to compare Zephyr and Havel–Hakimi graph topologies.
+Figure~\ref{fig:zephyr_hh} provides a pictorial comparison of the two, for graphs of comparable size and average degree.
 
 \begin{figure}
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{imgs/zephyr_bfs.png}
+    \includegraphics[width=\linewidth]{imgs/zephyr.png}
     \caption{Zephyr QPU topology $G_Q$ with parameters $m=1$, $t=4$.}
-    \Description{Example of Zephyr QPU topology $G_Q$: parameters $m=1, t=4$.}
     \label{fig:zephyr_qpu}
   \end{subfigure}\hfill
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\linewidth]{imgs/havel_hakimi.png}
     \caption{Havel-Hakimi QPU topology $G_Q$: 48 nodes of degree 12.}
-    \Description{Example Havel-Hakimi QPU topology $G_Q$ with 48 nodes each one with degree 12.}
     \label{fig:hh_qpu}
   \end{subfigure}
   \caption{QPUs with comparable size and average degree but distinct structural properties.}
@@ -142,46 +130,43 @@ At a coarse level, metrics such as the number of nodes, edges, and the resulting
 \end{figure}
 
 \subsection{Zephyr Graph}
-\LH{(Secondo me questa sezione è piuttosto inaccessibile. Credo serva una figura per far capire cos'è la \emph{grid} e cosa una \emph{tile}. Forse si può togliere l'attuale Fig 1. In fondo, è probabile che abbamo spiegato ragionevolmente bene cos'è ME.)}
+
 The Zephyr graph~\cite{QPU} defines the current D-Wave QPU topology.
-It is parameterized by the grid size $m$ and the tile size $t$, forming an $m \times m$ array of cross-shaped blocks, each with $t$ nodes extending from a central hub.
-We explored configurations with $(m,t) \in [2,7] \times [1,25]$, generating 150 QPU graphs ranging from 40 to 10,500 nodes and 114 to 508,750 edges.
+It is parameterized by the grid size $m$ and the tile size $t$, forming an $m \times m$ array of cross-shaped tiles, each composed of $t$ qubits in each cross arm.
+Each tile represents a local connectivity unit (the ``cross''), while the grid defines how these tiles are interconnected to form the global QPU layout.
+Figure~\ref{fig:zephyr_qpu} shows an example of a Zephyr topology for parameters $m=1$ and $t=4$.
+
+We explored configurations with $(m,t) \in [2,7] \times [1,25]$, generating 150 QPU graphs ranging from 40 to 10,500 nodes and from 114 to 508,750 edges.
 
 \subsection{Havel-Hakimi Graph}
 
 Havel–Hakimi graphs are constructed by specifying the uniform node degree $deg$ and the total number of nodes $num\_qubits$.
-The Havel–Hakimi algorithm~\cite{hh} iteratively connects nodes following a descending degree sequence, producing graphs with controlled degree distributions but limited structural regularity.
-We generated regular instances with $deg \in \{5+25k \mid k=0,\dots,4\}$ and $num\_qubits \in \{50+350m \mid m=0,\dots,29\}$, yielding 150 graphs from 50 to 10,200 nodes and 125 to 535,500 edges. \LH{(Immagino che i parametri siano stati scelti per avere grafi con macro misure (numero nodi e archi) comparabili e poter procedere al loro confronto usando le metriche finemente granulari. Questo va detto esplicitamente, forse integrando il tutto quello che dici nel paragrafo ``Connectivity constraints.'' qui sotto. Tra l'altro ``Connectivity constraints'' è terminologia standard?)}
+The Havel–Hakimi algorithm~\cite{hh} iteratively connects nodes following a descending degree sequence.
+Havel-Hakimi graphs are more regular than Zephyr ones but, they lack modularity, since there is no a priori structure repeated periodically.
+We generated regular instances with $deg \in \{5+25k \mid k=0,\dots,4\}$ and $num\_qubits \in \{50+350m \mid m=0,\dots,29\}$, yielding 150 graphs ranging from 50 to 10,200 nodes and from 125 to 535,500 edges.
+These parameters were chosen so that Havel–Hakimi graphs cover approximately the same ranges of size and average degree as the Zephyr graphs, allowing a fair comparison in terms of expressive power.
 
-\paragraph{Connectivity constraints.}
-Across all configurations, the maximum node degree was limited to approximately 100 to remain physically plausible.
-Current architectures, such as Zephyr, achieve degrees up to 20; values beyond 100 \LH{would exceed foreseeable fabrication limits} \LH{(Quale fonte per la precedente affermazione?)}.
-This constraint ensures that our exploration remains both physically grounded and indicative of future QPU scalability trends.
+To ensure physical plausibility, we imposed a maximum node degree of about 100.
+This value reflects a reasonable upper bound based on foreseeable fabrication constraints in near-term QPU architectures: for reference, current Zephyr topologies reach node degrees up to 20 and in 10 years they only succeed to double the degree from the original Chimera topology.
+This constraint allows us to explore the scalability of connectivity while remaining within a range that could be physically realizable in future QPUs.
 
 \section{Methodology}
 
-We generated Zephyr and Havel–Hakimi graphs, \LH{standing for $G_Q$s,} using \texttt{zephyr\_graph} from \texttt{dwave\_networkx} and \texttt{havel\_hakimi\_graph} from \texttt{networkx}.
+We generated Zephyr and Havel–Hakimi graphs, standing for $G_Q$s, using \texttt{zephyr\_graph} from \texttt{dwave\_networkx} and \texttt{havel\_hakimi\_graph} from \texttt{networkx}.
 For each $G_Q$, we determined the largest embeddable clique $G_P = K_n$ using the \texttt{find\_embedding} function from \texttt{minorminer}.
 The resulting embedded graph $G_E$ associates each node of $G_P$ with a chain of adjacent qubits in $G_Q$, preserving the logical adjacency structure.
 
-\LH{We use \LH{$K_n$} cliques as benchmark because real-world QUBO instances $G_P$ often are highly connected graphs.}
-%%%%%%%%%%%%%%%% Originale
-%For each embedding, we collected:
-%\begin{itemize}
-%  \item Graph descriptors: type, parameters, number of nodes and edges, average degree;
-%  \item Size of the largest embeddable clique;
-%  \item Descriptive statistics (mean, median, mode) of qubit-chain lengths in $G_E$.
-%\end{itemize}
-\LH{(La versione originale di quel che segue l'ho commentata perché, se pensata, più o meno, in termini di formula logica, non mi pareva filasse.)}
+We use $K_n$ cliques as benchmark because real-world QUBO instances $G_P$ often are highly connected graphs.
 Fixed $G_Q$, for each embedding of $K_n$ generating $G_E^{K_n}$, we collect:
 \begin{itemize}
-  \item the \emph{graph descriptors}: \emph{type}, \emph{parameters}, \emph{number of nodes} and \emph{edges}, \emph{average degree} $\tilde{\delta}_n$ \LH{of $K_n$?}, \LH{of $G_E^{K_n}$?};
+  \item the \emph{QPU descriptors}: \emph{type}, \emph{parameters}, \emph{number of nodes} and \emph{edges}, \emph{average degree} $\tilde{d}_n$ of $G_Q$;
   \item the \emph{descriptive statistics}: \emph{mean}, \emph{median}, and \emph{mode} of qubit-chain lengths in $G_E^{K_n}$.
 \end{itemize}
-Moreover, relatively to every $G_Q$, we record the size $\operatorname{\textit{max}}$ of the largest $K_{\operatorname{\textit{max}}} $ that ME can embed into $G_Q$, generating $G_E^{K_{\operatorname{\textit{max}}}}$.
+Moreover, relatively to every $G_Q$, we record the size $\operatorname{\textit{max}}$ of the largest $K_{\operatorname{\textit{max}}}$ that ME can embed into $G_Q$, generating $G_E^{K_{\operatorname{\textit{max}}}}$.
 
-Finally, for every $G_Q$, we normalize \LH{every} average degree $\tilde{\delta}_n$, and \LHs{the largest embeddable clique size} the value $\operatorname{\textit{max}}$ by the number of qubits in $G_Q$.
-The normalization provides a unified comparison space to highlight structural correlations between QPU topologies and embedding performance \LH{because \ldots (secondo me una motivazione andrebbe data)}.
+Finally, for every $G_Q$, we normalize every average degree $\tilde{d}_n$, and the value $\operatorname{\textit{max}}$ by the number of qubits in $G_Q$.
+The normalization provides a unified comparison space to highlight structural correlations between QPU topologies and embedding performance, because it removes the scale dependence on QPU size, allowing us to compare topologies with different numbers of qubits on equal footing.
+The normalized quantities described above provide the basis for evaluating how different QPU topologies affect both embedding capacity and chain compactness, as reported in the following section.
 
 \section{Results}
 
@@ -190,31 +175,27 @@ The normalization provides a unified comparison space to highlight structural co
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\linewidth]{imgs/vs.png}
-    \caption{Normalized size of embedded cliques $G_P$ across Zephyr and Havel–Hakimi QPU $G_Q$.}
-    \Description{Scatter plot comparing the normalized clique size embeddable on Zephyr and Havel–Hakimi QPU graphs $G_Q$.}
+    \caption{Normalized size of embedded $K_{\operatorname{\textit{max}}}$ across Zephyr and Havel–Hakimi QPU $G_Q$.}
     \label{fig:zephyr_vs_hh}
   \end{subfigure}\hfill
-  \begin{subfigure}{0.48\textwidth}
+  \begin{subfigure}{0.47\textwidth}
     \centering
     \includegraphics[width=\linewidth]{imgs/chains.png}
-    \caption{\LHs{Median chain length in $G_E$ for each QPU configuration $G_Q$.} \LH{Median chain length among $G_E^{K_1} \ldots G_E^{K_{G_Q}}$ for every $G_Q$? Cambierei anche le didascalie nelle figure}}
-    \Description{Median lengths of qubit chains in $G_E$ when $G_Q$ is Zephyr and Havel–Hakimi topology.}
+    \caption{Median chain length of $G_E^{K_{\operatorname{\textit{max}}}}$ for every Zephyr and Havel–Hakimi QPU $G_Q$}
     \label{fig:chains}
   \end{subfigure}
-  \caption{Comparing \ldots \LH{(Senza questa caption non compare al numerazione per la figura 3.)}}
-  \Description{Comparing \ldots}
+  \caption{Largest dimensione (a) and median chain lenght (b) of $G_E^{K_{\operatorname{\textit{max}}}}$ for Zephyr and Havel–Hakimi QPU topologies.}
   \label{fig:zephyr_vs_hh and chains}
 \end{figure}
 
 Figure~\ref{fig:zephyr_vs_hh} summarizes the results regarding the maximum size clique embeddable in a given QPU.
-The horizontal axis represents the normalized average degree of $G_Q$, while the vertical axis reports the normalized size of the largest clique $G_P$ successfully embedded.
-\LHs{Distinct scaling behaviors emerge for the two topologies.}
+The horizontal axis represents the normalized average degree of $G_Q$, while the vertical axis reports the normalized size of the largest clique $G_P$ ($K_{\operatorname{\textit{max}}}$) successfully embedded.
 
 Havel–Hakimi graphs (blue points) display an almost linear scaling: as connectivity increases, the size of the embeddable clique grows proportionally.
 Zephyr topologies (red points) exhibit a sublinear trend—highly expressive at low degrees but saturating as connectivity increases.
 
 Figure~\ref{fig:chains} shows that embeddings on Havel–Hakimi graphs yield shorter qubit chains and smoother scaling.
-Overall, these results suggest that synthetic topologies with controlled degree distributions can enhance embedding capacity without excessive chain length, thus improving robustness and scalability \LH{of solving problems by QA(?)}.
+Overall, these results suggest that synthetic topologies with controlled degree distributions can enhance embedding capacity without excessive chain length, thus improving robustness and scalability of solving problems by QA.
 
 \section{Future work}
 
