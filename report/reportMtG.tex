@@ -18,9 +18,9 @@
 
 % NOTES CMDS
 % \usepackage{ulem}
-% \newcommand{\LH}[1]{\textcolor{blue}{{ #1}}}
+\newcommand{\LH}[1]{\textcolor{blue}{{ #1}}}
 % \newcommand{\LHs}[1]{\textcolor{blue}{\sout {#1}}}
-% \newcommand{\MH}[1]{\textcolor{red}{{ #1}}}
+\newcommand{\MH}[1]{\textcolor{red}{{ #1}}}
 % \newcommand{\MHs}[1]{\textcolor{red}{\sout {#1}}}
 % END NOTES CMDS
 
@@ -147,12 +147,14 @@ We generated regular instances with $deg \in \{5+25k \mid k=0,\dots,4\}$ and $nu
 These parameters were chosen so that Havel–Hakimi graphs cover approximately the same ranges of size and average degree as the Zephyr graphs, allowing a fair comparison in terms of expressive power.
 
 To ensure physical plausibility, we imposed a maximum node degree of about 100.
-This value reflects a reasonable upper bound based on foreseeable fabrication constraints in near-term QPU architectures: for reference, current Zephyr topologies reach node degrees up to 20 and in 10 years they only succeed to double the degree from the original Chimera topology.
+This value reflects a reasonable upper bound based on foreseeable fabrication constraints in near-term QPU architectures: for reference, current Zephyr topologies reach node degrees up to 20 and in 10 years
+%they}
+\LH{D-Wave} only succeed to double the degree from the original Chimera topology.
 This constraint allows us to explore the scalability of connectivity while remaining within a range that could be physically realizable in future QPUs.
 
 \section{Methodology}
 
-We generated Zephyr and Havel–Hakimi graphs, standing for $G_Q$s, using \texttt{zephyr\_graph} from \texttt{dwave\_networkx} and \texttt{havel\_hakimi\_graph} from \texttt{networkx}.
+We generated Zephyr and Havel–Hakimi graphs, standing for $G_Q$s, using \texttt{zephyr\_graph} from \texttt{dwave\_networkx} and \texttt{havel\_hakimi\_graph} from \texttt{networkx} \LH{(È una libreria python standard, immagino)}.
 For each $G_Q$, we determined the largest embeddable clique $G_P = K_n$ using the \texttt{find\_embedding} function from \texttt{minorminer}.
 The resulting embedded graph $G_E$ associates each node of $G_P$ with a chain of adjacent qubits in $G_Q$, preserving the logical adjacency structure.
 
@@ -189,7 +191,7 @@ The normalized quantities described above provide the basis for evaluating how d
 \end{figure}
 
 Figure~\ref{fig:zephyr_vs_hh} summarizes the results regarding the maximum size clique embeddable in a given QPU.
-The horizontal axis represents the normalized average degree of $G_Q$, while the vertical axis reports the normalized size of the largest clique $G_P$ ($K_{\operatorname{\textit{max}}}$) successfully embedded.
+The horizontal axis represents the normalized average degree of $G_Q$, while the vertical axis reports the normalized size of the largest clique $G_P$, \LH{i.e. $K_{\operatorname{\textit{max}}}$}, successfully embedded.
 
 Havel–Hakimi graphs (blue points) display an almost linear scaling: as connectivity increases, the size of the embeddable clique grows proportionally.
 Zephyr topologies (red points) exhibit a sublinear trend—highly expressive at low degrees but saturating as connectivity increases.
