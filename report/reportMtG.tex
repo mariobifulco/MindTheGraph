@@ -24,7 +24,7 @@
 % \newcommand{\MHs}[1]{\textcolor{red}{\sout {#1}}}
 % END NOTES CMDS
 
-\title{Exploring Graph Topologies in Quantum Annealing}
+\title{Exploring Topologies in Quantum Annealing: A Hardware-Aware Routing Perspective}
 
 \author{Mario Bifulco}
 \affiliation{%
@@ -43,17 +43,16 @@
 \begin{document}
 
 \begin{abstract}
-  Quantum Annealing (QA) offers a promising framework for solving NP-hard optimization problems, but its effectiveness is constrained by the topology of the underlying quantum hardware. Solving an optimization problem $P$ via QA involves a hardware-aware compilation which requires representing $P$ as a graph $G_P$ and relating it to a minor of $G_Q$, with $G_Q$ being the hardware graph that defines how qubits connect to each other in a QA-based quantum processing unit (QPU).
+  Quantum Annealing (QA) offers a promising framework for solving NP-hard optimization problems, but its effectiveness is constrained by the topology of the underlying quantum hardware. Solving an optimization problem $P$ via QA involves a hardware-aware circuit compilation and routing phase which requires representing $P$ as a graph $G_P$ and embedding it into the hardware connectivity graph $G_Q$ that defines how qubits connect to each other in a QA-based quantum processing unit (QPU).
 
-  Minor Embedding (ME) is a possible operational form of the hardware-aware compilation we are dealing with. ME heuristically builds a map that associates each node of $G_P$ --- the logical variables of $P$ --- to a chain of adjacent nodes in $G_Q$ by means of one of its minors, so that the arcs of $G_P$ are preserved as physical connections among qubits in $G_Q$.
+  Minor Embedding (ME) is a possible operational form of this hardware-aware compilation. ME heuristically builds a map that associates each node of $G_P$ --- the logical variables of $P$ --- to a chain of adjacent nodes in $G_Q$ by means of one of its minors, so that the arcs of $G_P$ are preserved as physical connections among qubits in $G_Q$.
 
   The static topology of hardwired qubits can clearly lead to inefficient compilations because $G_Q$ cannot be a clique, currently. We propose a methodology and a set of criteria to evaluate how the hardware topology $G_Q$ can negatively affect the embedded problem, thus making the quantum optimization more sensible to noise.
 
   We evaluate the result of ME across two QPU topologies: Zephyr graphs (used in current D-Wave systems) and Havel-Hakimi graphs, which allow controlled variation of the average node degree. This enables us to study how the ratio `number of nodes/number of incident arcs per node' affects ME success rates to map $G_P$ into a minor of $G_Q$.
 
-  Our findings, obtained through ME executed on classical, i.e. non-quantum, architectures, suggest that Havel–Hakimi–based topologies, on average, require shorter qubit chains in the minor  of $G_P$, exhibiting smoother scaling of the largest embeddable $G_P$ as the QPU size increases. These characteristics indicate their potential as alternative designs for QA-based QPUs.
+  Our findings, obtained through ME executed on classical, i.e. non-quantum, architectures, suggest that Havel–Hakimi–based topologies, on average, require shorter qubit chains in the minor of $G_P$, exhibiting smoother scaling of the largest embeddable $G_P$ as the QPU size increases. These characteristics indicate their potential as alternative designs for QA-based QPUs.
 \end{abstract}
-
 
 \maketitle
 
@@ -76,19 +75,18 @@ The QA workflow can be schematically divided into three main stages:
   \item Execute the annealing process, during which the physical system described by $G_Q$ evolves toward a low-energy state encoding the solution of $P$.
 \end{enumerate*}
 
-The second stage of the compilation flow, known as minor embedding (ME), is a heuristic procedure that adapts the logical connectivity of the problem graph $P$ to the limited, non-clique topology $G_Q$ of current QPUs.
+The second stage is the crucial hardware-aware compilation and routing step, known as \emph{Minor Embedding} (ME), which effectively routes the logical problem's connectivity across the physical QPU topology.
 Since the structure of $G_Q$ constrains which problems can be efficiently embedded, the quality of this stage plays a key role in determining the performance of the overall computation.
-For this reason, we aim to develop tools to assess and improve ME quality.
 
-\paragraph{Minor embedding}
-For completeness, recall that a graph $G_m$ is a \emph{minor} of another graph $G$ if it can be obtained from $G$ through a finite sequence of edge contractions and vertex or edge deletions.
-A classical result in graph theory—the \emph{Robertson–Seymour theorem}—states that the set of all minors of a given graph is \emph{downward-closed} under the minor relation, and that any such family can be characterized by a finite number of \emph{forbidden minors}.
+\paragraph{Problem formulation.}
+Given a logical problem graph $G_P$ and a hardware topology $G_Q$, the compilation goal can be expressed as:
+\emph{minimize the total qubit chain length required to embed $G_P$ into $G_Q$, while preserving all logical adjacency.}
+This formulation clarifies the connection between embedding efficiency, routing overhead, and hardware-aware optimization.
 
-In QA, however, the objective is more concrete: given a problem graph $G_P$ and a hardware graph $G_Q$, the goal is to find a minor $G_m$ of $G_Q$ that is isomorphic to $G_P$.
-In practical terms, this means associating each logical variable of $P$ (a node of $G_P$) with a chain of physically adjacent qubits (nodes of $G_Q$), while preserving the adjacency relations that encode the problem’s constraints.
-
-The main difficulty of this process lies in the fact that current QPUs cannot realize fully connected topologies.
-Consequently, long chains of qubits are often required to emulate logical connections, increasing susceptibility to noise and reducing the effective precision of the quantum annealing step.
+\paragraph{Minor embedding.}
+A graph $G_m$ is a \emph{minor} of another graph $G$ if it can be obtained through edge contractions and vertex or edge deletions.
+In QA, the objective is to find a minor $G_m$ of $G_Q$ that is isomorphic to $G_P$, effectively mapping logical variables to physical qubits through routing paths (chains).
+Long qubit chains require stronger coupling penalties to maintain coherence, making the system more fragile and noise-sensitive.
 
 \subsection{Topological limitations and motivation for this study}
 
@@ -102,10 +100,8 @@ This observation motivates a systematic study of how different QA-based QPUs top
 
 The topology can be analyzed at both coarse and fine granularity.
 At a coarse level, metrics such as the number of nodes, edges, and the resulting average degree provide a first approximation of how densely connected the QPU is.
-
-At a finer level, additional structural metrics provide a more detailed understanding of the topology.
+At a finer level, metrics such as \emph{regularity} and \emph{modularity} capture local and global patterns affecting routing complexity and embedding quality.
 In particular, \emph{regularity} quantifies how uniform the degree distribution is across nodes and \emph{modularity} measures the extent to which the graph can be partitioned into clusters with dense internal connections and sparse external ones.
-These finer-grained properties help highlight local structural inhomogeneities, possible bottlenecks for embedding, and overall connectivity patterns that influence the expressive power.
 
 We use these fine-grained metrics to compare Zephyr and Havel–Hakimi graph topologies.
 Figure~\ref{fig:zephyr_hh} provides a pictorial comparison of the two, for graphs of comparable size and average degree.
@@ -131,7 +127,7 @@ Figure~\ref{fig:zephyr_hh} provides a pictorial comparison of the two, for graph
 \subsection{Zephyr Graph}
 
 The Zephyr graph~\cite{QPU} defines the current D-Wave QPU topology.
-It is parameterized by the grid size $m$ and the tile size $t$, forming an $m \times m$ array of cross-shaped tiles, each composed of $t$ qubits in each cross arm.
+It is parameterized by grid size $m$ and tile size $t$, forming an $m \times m$ array of cross-shaped tiles, each composed of $t$ qubits in each cross arm.
 Each tile represents a local connectivity unit (the ``cross''), while the grid defines how these tiles are interconnected to form the global QPU layout.
 Figure~\ref{fig:zephyr_qpu} shows an example of a Zephyr topology for parameters $m=1$ and $t=4$.
 
