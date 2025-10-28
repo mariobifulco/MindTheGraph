@@ -24,7 +24,7 @@
 % \newcommand{\MHs}[1]{\textcolor{red}{\sout {#1}}}
 % END NOTES CMDS
 
-\title{Exploring Topologies in Quantum Annealing: A Hardware-Aware Routing Perspective}
+\title{Exploring Topologies in Quantum Annealing: A Hardware-Aware Perspective}
 
 \author{Mario Bifulco}
 \affiliation{%
@@ -43,7 +43,7 @@
 \begin{document}
 
 \begin{abstract}
-  Quantum Annealing (QA) offers a promising framework for solving NP-hard optimization problems, but its effectiveness is constrained by the topology of the underlying quantum hardware. Solving an optimization problem $P$ via QA involves a hardware-aware circuit compilation and routing phase which requires representing $P$ as a graph $G_P$ and embedding it into the hardware connectivity graph $G_Q$ that defines how qubits connect to each other in a QA-based quantum processing unit (QPU).
+  Quantum Annealing (QA) offers a promising framework for solving NP-hard optimization problems, but its effectiveness is constrained by the topology of the underlying quantum hardware. Solving an optimization problem $P$ via QA involves a hardware-aware circuit compilation which requires representing $P$ as a graph $G_P$ and embedding it into the hardware connectivity graph $G_Q$ that defines how qubits connect to each other in a QA-based quantum processing unit (QPU).
 
   Minor Embedding (ME) is a possible operational form of this hardware-aware compilation. ME heuristically builds a map that associates each node of $G_P$ --- the logical variables of $P$ --- to a chain of adjacent nodes in $G_Q$ by means of one of its minors, so that the arcs of $G_P$ are preserved as physical connections among qubits in $G_Q$.
 
@@ -75,17 +75,17 @@ The QA workflow can be schematically divided into three main stages:
   \item Execute the annealing process, during which the physical system described by $G_Q$ evolves toward a low-energy state encoding the solution of $P$.
 \end{enumerate*}
 
-The second stage is the crucial hardware-aware compilation and routing step, known as \emph{Minor Embedding} (ME), which effectively routes the logical problem's connectivity across the physical QPU topology.
+The second stage is the crucial hardware-aware compilation step, known as \emph{Minor Embedding} (ME), which effectively routes the logical problem's connectivity across the physical QPU topology.
 Since the structure of $G_Q$ constrains which problems can be efficiently embedded, the quality of this stage plays a key role in determining the performance of the overall computation.
 
 \paragraph{Problem formulation.}
 Given a logical problem graph $G_P$ and a hardware topology $G_Q$, the compilation goal can be expressed as:
 \emph{minimize the total qubit chain length required to embed $G_P$ into $G_Q$, while preserving all logical adjacency.}
-This formulation clarifies the connection between embedding efficiency, routing overhead, and hardware-aware optimization.
+This formulation clarifies the connection between embedding efficiency and hardware-aware optimization.
 
 \paragraph{Minor embedding.}
 A graph $G_m$ is a \emph{minor} of another graph $G$ if it can be obtained through edge contractions and vertex or edge deletions.
-In QA, the objective is to find a minor $G_m$ of $G_Q$ that is isomorphic to $G_P$, effectively mapping logical variables to physical qubits through routing paths (chains).
+In QA, the objective is to find a minor $G_m$ of $G_Q$ that is isomorphic to $G_P$, effectively mapping logical variables to physical qubits through chains.
 Long qubit chains require stronger coupling penalties to maintain coherence, making the system more fragile and noise-sensitive.
 
 \subsection{Topological limitations and motivation for this study}
@@ -100,7 +100,7 @@ This observation motivates a systematic study of how different QA-based QPUs top
 
 The topology can be analyzed at both coarse and fine granularity.
 At a coarse level, metrics such as the number of nodes, edges, and the resulting average degree provide a first approximation of how densely connected the QPU is.
-At a finer level, metrics such as \emph{regularity} and \emph{modularity} capture local and global patterns affecting routing complexity and embedding quality.
+At a finer level, metrics such as \emph{regularity} and \emph{modularity} capture local and global patterns affecting embedding quality.
 In particular, \emph{regularity} quantifies how uniform the degree distribution is across nodes and \emph{modularity} measures the extent to which the graph can be partitioned into clusters with dense internal connections and sparse external ones.
 
 We use these fine-grained metrics to compare Zephyr and Havel–Hakimi graph topologies.
